@@ -14,8 +14,9 @@ struct HomeView: View {
     
     var body: some View {
         
-        if model.restaurants.count != 0 || model.sights.count != 0{
-            
+        if model.restaurants.count != 0 || model.sights.count != 0 {
+          
+            NavigationView{
             if !isMapShowing {
                 // show list
                 VStack (alignment: .leading){
@@ -31,9 +32,11 @@ struct HomeView: View {
                     
                     BusinessList()
                 }.padding([.horizontal, .top])
+                .navigationBarHidden(true)
             }
             else{
                 
+            }
             }
         }
         else {
