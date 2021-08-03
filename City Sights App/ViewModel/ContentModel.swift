@@ -12,6 +12,7 @@ class ContentModel: NSObject, CLLocationManagerDelegate, ObservableObject {
     
     var locationManager = CLLocationManager()
     
+    @Published var authorizationState = CLAuthorizationStatus.notDetermined
     @Published var restaurants = [Business]()
     @Published var sights = [Business]()
     
@@ -29,6 +30,7 @@ class ContentModel: NSObject, CLLocationManagerDelegate, ObservableObject {
     
     func locationManagerDidChangeAuthorization (_ manager: CLLocationManager ){
         
+        authorizationState = locationManager.authorizationStatus
         if locationManager.authorizationStatus == .authorizedAlways ||
             locationManager.authorizationStatus == .authorizedWhenInUse {
             // we have permission
@@ -91,6 +93,19 @@ class ContentModel: NSObject, CLLocationManagerDelegate, ObservableObject {
                     do {
                         let decoder = JSONDecoder()
                         let result = try decoder.decode(BusinessSearch.self, from: data!)
+                        
+                        // sort business
+                        var businesses = result.businesses
+                        businesses.sort { (b1, b2) -> Bool in
+                            // if b1 is closer tham b2 then this will happen
+                            return b1.distance ?? 0 < b2.distance ?? 0
+                        }
+                        
+                        // call get image function
+                        for b in result.businesses {
+                            b.getImageData()
+                        }
+                        
                         
                         // assign results to appropriate property
                         // dispatchQueue is used to move something away from background 
