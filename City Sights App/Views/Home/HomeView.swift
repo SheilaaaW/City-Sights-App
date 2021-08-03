@@ -24,7 +24,9 @@ struct HomeView: View {
                         Image(systemName: "location")
                         Text("Location")
                         Spacer()
-                        Button(action: /*@START_MENU_TOKEN@*/{}/*@END_MENU_TOKEN@*/, label: {
+                        Button(action: {
+                            self.isMapShowing = true
+                        }, label: {
                             Text("Switch To Map View")
                         })
                     }
@@ -35,7 +37,7 @@ struct HomeView: View {
                 .navigationBarHidden(true)
             }
             else{
-                
+                BusinessMap()
             }
             }
         }
